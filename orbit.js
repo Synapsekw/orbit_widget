@@ -1,14 +1,14 @@
 /**
- * Orbit AI Chat Widget - Custom Blue Glass
+ * Orbit AI Chat Widget - Unified Glass Theme
  */
 
 class GlassChatWidget {
     constructor(config) {
         this.webhookUrl = config.webhookUrl;
-        this.logoUrl = config.logoUrl || null;        // Launcher Icon (symbol)
-        this.headerLogoUrl = config.headerLogoUrl || null; // Header Logo (Horizontal)
+        this.logoUrl = config.logoUrl || null;        
+        this.headerLogoUrl = config.headerLogoUrl || null; 
         this.chatTitle = config.chatTitle || "Orbit Support"; 
-        this.primaryColor = config.primaryColor || '#0284c7'; // Orbit Blue
+        this.primaryColor = config.primaryColor || '#0284c7'; 
         this.welcomeMessage = config.welcomeMessage || "Hello! How can Orbit help you today?";
         this.sessionId = this.getOrCreateSessionId();
         this.init();
@@ -121,7 +121,7 @@ class GlassChatWidget {
                 --primary: ${this.primaryColor};
                 
                 /* ORBIT GLASS THEME */
-                --glass-bg: rgba(10, 20, 40, 0.65); /* Deep translucent blue/black */
+                --glass-bg: rgba(10, 20, 40, 0.65); /* Deep Translucent Blue/Black */
                 --glass-blur: blur(20px);
                 --glass-border: rgba(255, 255, 255, 0.1);
                 
@@ -132,19 +132,30 @@ class GlassChatWidget {
                 right: 25px;
             }
 
-            /* LAUNCHER */
+            /* LAUNCHER - UPDATED TO MATCH WINDOW */
             .chat-launcher {
                 width: 65px; height: 65px;
-                background: rgba(14, 165, 233, 0.7); /* Sky Blue Translucent */
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                
+                /* EXACT MATCH TO WINDOW */
+                background: var(--glass-bg); 
+                backdrop-filter: var(--glass-blur);
+                -webkit-backdrop-filter: var(--glass-blur);
+                border: 1px solid var(--glass-border);
+                
                 border-radius: 50%; cursor: pointer;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                box-shadow: 0 8px 32px rgba(0,0,0,0.5); /* Slightly deeper shadow for pop */
                 display: flex; align-items: center; justify-content: center;
-                transition: transform 0.3s ease;
+                transition: transform 0.3s ease, border-color 0.3s, background 0.3s;
                 overflow: hidden;
             }
-            .chat-launcher:hover { transform: scale(1.05); background: var(--primary); }
+            
+            /* HOVER: Light up the border and make background slightly more solid */
+            .chat-launcher:hover { 
+                transform: scale(1.05); 
+                border-color: var(--primary);
+                background: rgba(15, 30, 60, 0.8); 
+            }
+            
             .chat-launcher.hidden { opacity: 0; pointer-events: none; transform: scale(0.5); }
             
             .launcher-img { width: 55%; height: 55%; object-fit: contain; pointer-events: none; }
@@ -173,7 +184,7 @@ class GlassChatWidget {
             }
             .chat-container.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
 
-            /* HEADER - Logic for Large Logo */
+            /* HEADER */
             .chat-header {
                 padding: 15px 24px; 
                 background: rgba(255, 255, 255, 0.03); 
@@ -201,14 +212,12 @@ class GlassChatWidget {
 
             .bubble { padding: 14px 18px; border-radius: 18px; font-size: 14px; line-height: 1.5; color: white; }
             
-            /* Orbit Blue Gradient for User */
             .message.user .bubble { 
                 background: linear-gradient(135deg, var(--primary), #0369a1); 
                 border-bottom-right-radius: 4px; 
                 box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
             }
             
-            /* Glass for Bot */
             .message.bot .bubble { 
                 background: rgba(255, 255, 255, 0.08); 
                 border: 1px solid rgba(255,255,255,0.08); 
@@ -230,7 +239,7 @@ class GlassChatWidget {
                     position: fixed; bottom: 0 !important; right: 0 !important; left: 0 !important; top: 0 !important;
                     width: 100vw !important; height: 100dvh !important; max-height: 100dvh !important;
                     border-radius: 0 !important; transform: none !important; margin: 0 !important;
-                    background-color: rgba(5, 10, 20, 0.95); 
+                    background-color: rgba(5, 10, 20, 0.98); 
                 }
                 .chat-container.open { opacity: 1; pointer-events: all; transform: none !important; }
                 .chat-header { padding-top: 20px; }
@@ -239,12 +248,10 @@ class GlassChatWidget {
     }
 
     getHTML() {
-        // Launcher Icon (symbol.svg)
         const launcherContent = this.logoUrl 
             ? `<img src="${this.logoUrl}" class="launcher-img" alt="Chat" />`
             : `<svg class="launcher-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>`;
 
-        // Header Logo (header_logo.png) OR Text Fallback
         const headerContent = this.headerLogoUrl
             ? `<img src="${this.headerLogoUrl}" class="header-logo" alt="Orbit" />`
             : `<span class="header-title">${this.chatTitle}</span>`;
